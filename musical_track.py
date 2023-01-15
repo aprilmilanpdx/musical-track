@@ -17,7 +17,7 @@ CREATE TABLE Artist (
 
 CREATE TABLE Genre (
     id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-    genre    TEXT UNIQUE
+    name    TEXT UNIQUE
 );
 
 CREATE TABLE Album (
@@ -39,11 +39,6 @@ CREATE TABLE Track (
 fname = input('Enter file name: ')
 if len(fname) < 1:
     fname = 'Library.xml'
-
-# <key>Track ID</key><integer>369</integer>
-# <key>Name</key><string>Another One Bites The Dust</string>
-# <key>Artist</key><string>Queen</string>
-# <key>Genre</key><string>Rock</string>
 
 def lookup(d, key):
     found = False
@@ -72,16 +67,14 @@ for entry in all:
     if name is None or artist is None or album is None or genre is None:
         continue
 
-    print(name, artist, genre, album, count, rating, length)
-
     cur.execute('''INSERT OR IGNORE INTO Artist (name)
         VALUES (?)''', (artist, ))
     cur.execute('SELECT id FROM Artist WHERE name = ? ', (artist, ))
     artist_id = cur.fetchone()[0]
     
-    cur.execute('''INSERT OR IGNORE INTO Genre (genre)
-        VALUES (?)''', (genre, ))
-    cur.execute('SELECT id FROM GENRE WHERE genre = ? ', (genre, ))
+    cur.execute('''INSERT OR IGNORE INTO Genre (name)
+        VALUES (?)''', (name, ))
+    cur.execute('SELECT id FROM GENRE WHERE name = ? ', (name, ))
     genre_id = cur.fetchone()[0]
 
     cur.execute('''INSERT OR IGNORE INTO Album (title, artist_id)
